@@ -7,7 +7,8 @@ Contenido Mínimo.
 
 Se pretende desarrollar una aplicación para gestionar recordatorios.
 El proyecto debe ser puesto en producción. La interfaz debe ser un clon de la siguiente:
-![] (img.png)
+
+![](img.jpg)
 
 Para el desarrollo de la aplicación deben desarrollarse 2 componentes.
 Un componente para el pie y otro para gestionar la lista de notas.
