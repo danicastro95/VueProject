@@ -1,16 +1,30 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Notas</router-link>|
+      <router-link to="/weather">Tiempo</router-link>
     </div>
     <router-view/>
+    <footer id="foot">
+      <Footer></Footer>
+    </footer>
   </div>
 </template>
 
+<script>
+import Footer from "@/components/Footer.vue";
+
+export default {
+  name: "foot",
+  components: {
+    Footer
+  }
+};
+</script>
+
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
