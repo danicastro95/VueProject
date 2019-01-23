@@ -7,7 +7,10 @@
 
 <script>
 export default {
-  name: "Notes"
+  name: "Notes",
+  data: {
+
+  }
 };
 </script>
 
