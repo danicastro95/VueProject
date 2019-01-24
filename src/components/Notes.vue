@@ -3,7 +3,6 @@
     <input type="text" @keyup.enter="addNote">
     <div id="list">
       <ul>
-        <!-- <Note v-for="(note, index) in notes" :key="index" v-bind:note="note"/> -->
         <li v-for="(note, index) in notes" :key="index">{{ note.title }}</li>
       </ul>
     </div>
@@ -11,13 +10,8 @@
 </template>
 
 <script>
-import Note from "@/components/Note.vue";
-
 export default {
   name: "Notes",
-  components: {
-    Note
-  },
   data() {
     return {
       notes: []
