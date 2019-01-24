@@ -1,13 +1,34 @@
 <template>
   <div>
-    <input type="text">
-    <div id="list"></div>
+    <input type="text" @keyup.enter="addNote">
+    <div id="list">
+      <ul>
+        <!-- <Note v-for="(note, index) in notes" :key="index" v-bind:note="note"/> -->
+        <li v-for="(note, index) in notes" :key="index">{{ note.title }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import Note from "@/components/Note.vue";
+
 export default {
-  name: "Notes"
+  name: "Notes",
+  components: {
+    Note
+  },
+  data() {
+    return {
+      notes: []
+    };
+  },
+  methods: {
+    addNote: function(event) {
+      this.notes.push({title: event.target.value});
+      event.target.value = '';
+    }
+  }
 };
 </script>
 
@@ -21,7 +42,6 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 a {
