@@ -1,9 +1,10 @@
 <template>
   <div>
     <input type="text" @keyup.enter="addNote">
+    Hay {{ completadas }} notas completadas
     <div id="list">
       <ul>
-        <li v-for="(note, index) in notes" :key="index">{{ note.title }}</li>
+        <li v-for="(note, index) in notes" :key="index" @click="clic">{{ note.title }}</li>
       </ul>
     </div>
   </div>
@@ -28,11 +29,29 @@ export default {
       this.notes.push(note);
       event.target.value = "";
       localStorage.setItem("notes", JSON.stringify(this.notes));
+    },
+    clic: function (event) {
+      console.log(event.detail);
+    }
+  },
+  computed: {
+    completadas: function() {
+      let list;
+      list = this.notes.filter(function(note) {
+        return note.done;
+      });
+      return list.length;
+    }
+  },
+  mounted() {
+    var notes = JSON.parse(localStorage.getItem("notes"));
+    if (notes) {
+      this.notes = notes;
     }
   }
 };
 
-Vue.component("button-counter", {
+/* Vue.component("button-counter", {
   data: function() {
     return {
       count: 0
@@ -40,9 +59,9 @@ Vue.component("button-counter", {
   },
   template:
     '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
-});
+}); */
 
-var app = new Vue({
+/* var app = new Vue({
   el: "#app",
   data: {
     newTodoText: "",
@@ -89,7 +108,7 @@ var app = new Vue({
       this.items = items;
     }
   }
-});
+}); */
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
