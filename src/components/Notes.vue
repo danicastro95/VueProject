@@ -2,15 +2,15 @@
   <div>
     <input type="text" @keyup.enter="addNote">
     <br>
-    {{ completadas }} tareas completadas de un total de {{ total }} |
+    {{ completed }} tareas completadas de un total de {{ notes.length }} |
     <span
       class="removeCompleted"
       @click="deleteCompleted"
     >Borrar tareas completadas</span>
     <div id="list">
-      <ul>
-        <!-- List Item -->
-        <li v-for="note in notes" :key="note.noteId">
+      <!-- List Item -->
+      <transition-group name="list" tag="p">
+        <div class="list-item" v-for="note in notes" :key="note.noteId">
           <!-- Notes Input -->
           <input type="checkbox" v-model="note.done" @change="updateLocalStorage()">
 
@@ -55,9 +55,10 @@
               v-bind:value="1"
             >
             <label :for="'hi' + note.noteId">Alta</label>
-          </div>A&ntilde;adido hace
-        </li>
-      </ul>
+          </div>
+          A&ntilde;adida hace {{ note.time | moment("from", "now", true) }}
+        </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -92,7 +93,7 @@ export default {
       let note = {
         title: event.target.value,
         priority: 2,
-        time: date.toDateString(),
+        time: date.toISOString(),
         done: false,
         noteId: date.valueOf()
       };
@@ -121,17 +122,14 @@ export default {
     }
   },
   computed: {
-    completadas: function() {
+    completed: function() {
       let list;
       list = this.notes.filter(function(note) {
         return note.done;
       });
       return list.length;
     },
-    total: function() {
-      return this.notes.length;
-    },
-    added: function (note) {
+    added: function(note) {
       return note.time;
     }
   },
@@ -164,6 +162,18 @@ a {
 .removeCompleted:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.list-item {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.list-leave-active {
+  position: absolute;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Roboto");
