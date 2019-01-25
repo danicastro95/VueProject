@@ -1,10 +1,62 @@
 <template>
   <div>
     <input type="text" @keyup.enter="addNote">
-    Hay {{ completadas }} notas completadas
+    <br>
+    {{ completadas }} tareas completadas de un total de {{ total }} |
+    <span
+      class="removeCompleted"
+      @click="deleteCompleted"
+    >Borrar tareas completadas</span>
     <div id="list">
       <ul>
-        <li v-for="(note, index) in notes" :key="index" @click="clic">{{ note.title }}</li>
+        <!-- List Item -->
+        <li v-for="note in notes" :key="note.noteId">
+          <!-- Notes Input -->
+          <input type="checkbox" v-model="note.done" @change="updateLocalStorage()">
+
+          <!-- Note content -->
+          {{ note.title }}
+          <!-- Delete button -->
+          <input type="button" @click="deleteNote(note)" value="Borrar">
+
+          <!-- Proridad -->
+          <br>Prioridad:
+          <!-- Radio Group -->
+          <div class="radio-group" @change="updateLocalStorage()">
+            <!-- Baja -->
+            <input
+              class="lowPr"
+              type="radio"
+              :id="'low' + note.noteId"
+              :name="note.noteId"
+              v-model="note.priority"
+              v-bind:value="3"
+            >
+            <label :for="'low' + note.noteId">Baja</label>
+
+            <!-- Media -->
+            <input
+              class="midPr"
+              type="radio"
+              :id="'mid' + note.noteId"
+              :name="note.noteId"
+              v-model="note.priority"
+              v-bind:value="2"
+            >
+            <label :for="'mid' + note.noteId">Media</label>
+
+            <!-- Alta -->
+            <input
+              class="highPr"
+              type="radio"
+              :id="'hi' + note.noteId"
+              :name="note.noteId"
+              v-model="note.priority"
+              v-bind:value="1"
+            >
+            <label :for="'hi' + note.noteId">Alta</label>
+          </div>A&ntilde;adido hace
+        </li>
       </ul>
     </div>
   </div>
@@ -19,19 +71,53 @@ export default {
     };
   },
   methods: {
+    updateLocalStorage: function() {
+      this.sortNotes();
+      localStorage.removeItem("notes");
+      localStorage.setItem("notes", JSON.stringify(this.notes));
+    },
+    sortNotes() {
+      this.notes.sort(function(a, b) {
+        if (a.priority > b.priority) {
+          return 1;
+        }
+        if (a.priority < b.priority) {
+          return -1;
+        }
+        return 0;
+      });
+    },
     addNote: function(event) {
+      let date = new Date();
       let note = {
         title: event.target.value,
-        priority: 1,
-        time: new Date().toDateString(),
-        done: false
+        priority: 2,
+        time: date.toDateString(),
+        done: false,
+        noteId: date.valueOf()
       };
-      this.notes.push(note);
+      this.notes.unshift(note);
       event.target.value = "";
       localStorage.setItem("notes", JSON.stringify(this.notes));
     },
-    clic: function (event) {
-      console.log(event.detail);
+    deleteNote: function(note) {
+      let i = 0;
+      this.notes.forEach(n => {
+        if (note.noteId == n.noteId) {
+          this.notes.splice(i, 1);
+        }
+        i++;
+      });
+      this.updateLocalStorage();
+    },
+    deleteCompleted: function() {
+      let aux = this.notes.filter(function(note) {
+        if (!note.done) {
+          return note;
+        }
+      });
+      this.notes = aux;
+      this.updateLocalStorage();
     }
   },
   computed: {
@@ -41,74 +127,22 @@ export default {
         return note.done;
       });
       return list.length;
+    },
+    total: function() {
+      return this.notes.length;
+    },
+    added: function (note) {
+      return note.time;
     }
   },
   mounted() {
     var notes = JSON.parse(localStorage.getItem("notes"));
     if (notes) {
       this.notes = notes;
+      this.sortNotes();
     }
   }
 };
-
-/* Vue.component("button-counter", {
-  data: function() {
-    return {
-      count: 0
-    };
-  },
-  template:
-    '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
-}); */
-
-/* var app = new Vue({
-  el: "#app",
-  data: {
-    newTodoText: "",
-    items: [
-      {
-        tarea: "Tarea 1",
-        prioridad: "ALTA",
-        fecha_creacion: new Date().getDate(),
-        completada: false
-      },
-      {
-        tarea: "Tarea 2",
-        prioridad: "MEDIA",
-        fecha_creacion: new Date().getDate(),
-        completada: true
-      }
-    ]
-  },
-  methods: {
-    addNewTodo: function() {
-      nuevaTarea = {
-        tarea: this.newTodoText,
-        prioridad: "BAJA",
-        fecha_creacion: new Date().getDate(),
-        completada: false
-      };
-      this.items.push(nuevaTarea);
-      this.newTodoText = "";
-      localStorage.setItem("todos", JSON.stringify(this.items));
-    }
-  },
-  computed: {
-    completadas: function() {
-      let list;
-      list = this.items.filter(function(item) {
-        return item.completada;
-      });
-      return list.length;
-    }
-  },
-  mounted() {
-    var items = JSON.parse(localStorage.getItem("todos"));
-    if (items) {
-      this.items = items;
-    }
-  }
-}); */
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -125,5 +159,42 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.removeCompleted:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+body {
+  background: #332f35;
+  font-family: roboto;
+}
+input[type="radio"] {
+  position: absolute;
+  visibility: hidden;
+  display: none;
+}
+label {
+  color: #9a929e;
+  display: inline-block;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 5px 20px;
+}
+input[type="radio"]:checked + label {
+  color: #ccc8ce;
+  background: #675f6b;
+}
+label + input[type="radio"] + label {
+  border-left: solid 3px #675f6b;
+}
+.radio-group {
+  border: solid 3px #675f6b;
+  display: inline-block;
+  margin: 20px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 </style>
