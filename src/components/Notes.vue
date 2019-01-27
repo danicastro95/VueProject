@@ -13,11 +13,14 @@
     <br>
     <div class="row text-light">
       <div class="col"></div>
-      {{ completed }} tareas completadas de un total de {{ notes.length }}&emsp;|
+      <img class="smallIcon" src="@/assets/total.png">
+      {{ completed }} tareas completadas de un total de {{ notes.length }}&emsp;|&emsp;
       <span
         class="removeCompleted text-warning"
         @click="deleteCompleted"
-      >&emsp;Borrar tareas completadas</span>
+      >
+        <img class="smallIcon" src="@/assets/clear.png">Borrar tareas completadas
+      </span>
       <div class="col"></div>
     </div>
 
@@ -26,23 +29,43 @@
       <div class="col-6 bg-secondary rounded" id="list">
         <!-- List Item -->
         <transition-group name="list" tag="p">
-          <div class="row list-item border border-dark text-white" v-for="note in notes" :key="note.noteId">
+          <div
+            class="row list-item border rounded text-white"
+            v-for="note in notes"
+            :key="note.noteId"
+          >
+            <!-- Note content -->
             <div class="col-10">
               <div class="row">
-                <!-- Notes Input -->
-                <input type="checkbox" v-model="note.done" @change="updateLocalStorage()">
-
-                <!-- Note content -->
-                {{ note.title }}
+                <div>
+                  <img
+                    class="check"
+                    v-if="note.done"
+                    src="@/assets/check.png"
+                    @click="note.done = !note.done; updateLocalStorage()"
+                  >
+                  <img
+                    class="check"
+                    src="@/assets/uncheck.png"
+                    @click="note.done = !note.done; updateLocalStorage()"
+                    v-else
+                  >
+                </div>
+                <span
+                  class="note align-top"
+                  v-if="note.done"
+                  style="text-decoration: line-through; color: #42b883;"
+                >{{ note.title }}</span>
+                <span class="note" v-else>{{ note.title }}</span>
               </div>
               <div class="row">
                 <!-- Proridad -->
-                <br>Prioridad:
+                <span class>Prioridad:</span>
                 <!-- Radio Group -->
                 <div class="radio-group" @change="updateLocalStorage()">
                   <!-- Baja -->
                   <input
-                    class="lowPr"
+                    class="lowPr priority"
                     type="radio"
                     :id="'low' + note.noteId"
                     :name="note.noteId"
@@ -53,7 +76,7 @@
 
                   <!-- Media -->
                   <input
-                    class="midPr"
+                    class="midPr priority"
                     type="radio"
                     :id="'mid' + note.noteId"
                     :name="note.noteId"
@@ -64,7 +87,7 @@
 
                   <!-- Alta -->
                   <input
-                    class="highPr"
+                    class="highPr priority"
                     type="radio"
                     :id="'hi' + note.noteId"
                     :name="note.noteId"
@@ -73,12 +96,15 @@
                   >
                   <label :for="'hi' + note.noteId">Alta</label>
                 </div>
+                <img class="smallIcon align-middle" src="@/assets/time.png">
                 A&ntilde;adida hace {{ note.time | moment("from", "now", true) }}
               </div>
             </div>
             <!-- Delete button -->
             <div class="col">
-              <b-button class="btn-danger" @click="deleteNote(note)"><img src="./remove.png" alt=""></b-button>
+              <b-button class="btn-danger float-right" @click="deleteNote(note)">
+                <img src="@/assets/remove.png">
+              </b-button>
             </div>
           </div>
         </transition-group>
@@ -170,6 +196,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.smallIcon {
+  height: 1em;
+  width: 1em;
+}
+.check {
+  height: 2.5em;
+  width: 2.5em;
+  margin-right: 2em;
+}
+
+.note {
+  font-size: 2.5em;
+  margin-top: -10px;
+}
+
 h3 {
   margin: 40px 0 0;
 }
@@ -184,6 +225,10 @@ a {
   color: #42b983;
 }
 
+p {
+  margin: 0;
+}
+
 .removeCompleted:hover {
   cursor: pointer;
   text-decoration: underline;
@@ -191,45 +236,60 @@ a {
 
 .list-item {
   transition: all 1s;
+  padding: 1em;
 }
+
 .list-enter, .list-leave-to
 /* .list-complete-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(-30px);
 }
+
 .list-leave-active {
   position: absolute;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Roboto");
-body {
-  background: #332f35;
-  font-family: roboto;
-}
+
 input[type="radio"] {
   position: absolute;
   visibility: hidden;
   display: none;
 }
 label {
-  color: #9a929e;
+  color: darkgrey;
   display: inline-block;
   cursor: pointer;
   font-weight: bold;
-  padding: 5px 20px;
+  padding: 0px 10px;
+  margin-bottom: 0;
 }
-input[type="radio"]:checked + label {
-  color: #ccc8ce;
-  background: #675f6b;
+
+.lowPr:checked + label {
+  color: white;
+  background: skyblue;
 }
-label + input[type="radio"] + label {
-  border-left: solid 3px #675f6b;
+
+.midPr:checked + label {
+  color: white;
+  background: steelblue;
+}
+
+.highPr:checked + label {
+  color: white;
+  background: red;
+}
+
+.priority,
+label {
+  border: solid 0.5px rgb(150, 150, 150);
+  border-radius: 7px;
+  margin-left: 2px;
 }
 .radio-group {
-  border: solid 3px #675f6b;
   display: inline-block;
-  margin: 20px;
-  border-radius: 10px;
+  margin-left: 5px;
+  margin-right: 25px;
   overflow: hidden;
 }
 </style>
