@@ -1,64 +1,89 @@
 <template>
   <div>
-    <input type="text" @keyup.enter="addNote">
+    <div class="row">
+      <div class="col"></div>
+      <input
+        class="col-5 form-control mr-sm-2"
+        type="text"
+        @keyup.enter="addNote"
+        placeholder="¿Qué quieres recordar?"
+      >
+      <div class="col"></div>
+    </div>
     <br>
-    {{ completed }} tareas completadas de un total de {{ notes.length }} |
-    <span
-      class="removeCompleted"
-      @click="deleteCompleted"
-    >Borrar tareas completadas</span>
-    <div id="list">
-      <!-- List Item -->
-      <transition-group name="list" tag="p">
-        <div class="list-item" v-for="note in notes" :key="note.noteId">
-          <!-- Notes Input -->
-          <input type="checkbox" v-model="note.done" @change="updateLocalStorage()">
+    <div class="row text-light">
+      <div class="col"></div>
+      {{ completed }} tareas completadas de un total de {{ notes.length }}&emsp;|
+      <span
+        class="removeCompleted text-warning"
+        @click="deleteCompleted"
+      >&emsp;Borrar tareas completadas</span>
+      <div class="col"></div>
+    </div>
 
-          <!-- Note content -->
-          {{ note.title }}
-          <!-- Delete button -->
-          <input type="button" @click="deleteNote(note)" value="Borrar">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-6 bg-secondary rounded" id="list">
+        <!-- List Item -->
+        <transition-group name="list" tag="p">
+          <div class="row list-item border border-dark text-white" v-for="note in notes" :key="note.noteId">
+            <div class="col-10">
+              <div class="row">
+                <!-- Notes Input -->
+                <input type="checkbox" v-model="note.done" @change="updateLocalStorage()">
 
-          <!-- Proridad -->
-          <br>Prioridad:
-          <!-- Radio Group -->
-          <div class="radio-group" @change="updateLocalStorage()">
-            <!-- Baja -->
-            <input
-              class="lowPr"
-              type="radio"
-              :id="'low' + note.noteId"
-              :name="note.noteId"
-              v-model="note.priority"
-              v-bind:value="3"
-            >
-            <label :for="'low' + note.noteId">Baja</label>
+                <!-- Note content -->
+                {{ note.title }}
+              </div>
+              <div class="row">
+                <!-- Proridad -->
+                <br>Prioridad:
+                <!-- Radio Group -->
+                <div class="radio-group" @change="updateLocalStorage()">
+                  <!-- Baja -->
+                  <input
+                    class="lowPr"
+                    type="radio"
+                    :id="'low' + note.noteId"
+                    :name="note.noteId"
+                    v-model="note.priority"
+                    v-bind:value="3"
+                  >
+                  <label :for="'low' + note.noteId">Baja</label>
 
-            <!-- Media -->
-            <input
-              class="midPr"
-              type="radio"
-              :id="'mid' + note.noteId"
-              :name="note.noteId"
-              v-model="note.priority"
-              v-bind:value="2"
-            >
-            <label :for="'mid' + note.noteId">Media</label>
+                  <!-- Media -->
+                  <input
+                    class="midPr"
+                    type="radio"
+                    :id="'mid' + note.noteId"
+                    :name="note.noteId"
+                    v-model="note.priority"
+                    v-bind:value="2"
+                  >
+                  <label :for="'mid' + note.noteId">Media</label>
 
-            <!-- Alta -->
-            <input
-              class="highPr"
-              type="radio"
-              :id="'hi' + note.noteId"
-              :name="note.noteId"
-              v-model="note.priority"
-              v-bind:value="1"
-            >
-            <label :for="'hi' + note.noteId">Alta</label>
+                  <!-- Alta -->
+                  <input
+                    class="highPr"
+                    type="radio"
+                    :id="'hi' + note.noteId"
+                    :name="note.noteId"
+                    v-model="note.priority"
+                    v-bind:value="1"
+                  >
+                  <label :for="'hi' + note.noteId">Alta</label>
+                </div>
+                A&ntilde;adida hace {{ note.time | moment("from", "now", true) }}
+              </div>
+            </div>
+            <!-- Delete button -->
+            <div class="col">
+              <b-button class="btn-danger" @click="deleteNote(note)"><img src="./remove.png" alt=""></b-button>
+            </div>
           </div>
-          A&ntilde;adida hace {{ note.time | moment("from", "now", true) }}
-        </div>
-      </transition-group>
+        </transition-group>
+      </div>
+      <div class="col"></div>
     </div>
   </div>
 </template>

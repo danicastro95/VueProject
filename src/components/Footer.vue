@@ -1,13 +1,19 @@
 <template>
-  <div>
-    <small>Developed by
-      <a href="https://github.com/danicastro95">Daniel Castro Moreno</a>.
+  <div class="text-light">
+    <small>
+      Desarrollado por
+      <a
+        class="text-success"
+        href="https://github.com/danicastro95"
+      >Daniel Castro Moreno</a>
     </small>
     <br>
-    <small>Code available on
-      <a href="https://github.com/danicastro95/VueProject">
-         Github
-      </a>
+    <small>
+      Código disponible en
+      <a
+        class="text-success"
+        href="https://github.com/danicastro95/VueProject"
+      >Github</a>
     </small>
   </div>
 </template>

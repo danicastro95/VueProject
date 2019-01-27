@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Notas</router-link> |
-      <router-link to="/weather">Tiempo</router-link>
+    <h1 class="text-white">Proyecto Vue.js - Daniel Castro Moreno</h1>
+    <div class="text-white" id="nav">
+      <router-link class="text-white" to="/">Notas</router-link> |
+      <router-link class="text-success" to="/weather">Tiempo</router-link>
     </div>
     <router-view/>
     <footer id="foot">
